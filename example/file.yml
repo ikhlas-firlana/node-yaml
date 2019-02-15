@@ -1,11 +1,24 @@
-# file.yml 
-YAML:
-  - A human-readable data serialization language
-  - https://en.wikipedia.org/wiki/YAML
-yaml:
-  - A complete JavaScript implementation
-  - https://www.npmjs.com/package/yaml
 config:
-  name: "service hello"
-  register:
-    connect: "yes!"
+ register:
+   - room: # room defined
+      name: "serv" # name room
+      config: 
+       - Authorization: # make array it will find if exist
+          service: "AUTH_SERVICE" # client request for validate to "AUTH_SERVICE" / "other service"
+          basic: "helloworld" # or basic authentication
+     channel: # register channel
+        - on: "message"
+        - on: "chat"
+ listener:
+    redis:
+     - on: # create event listener
+        channel: "chat_time" # from topic redis
+        publish: 
+          room: "serv" # looking for room
+          channel: "chat" # brod cast to channel
+     - on:
+        channel: "hear_time" # same as above
+        publish:
+          room: "serv"
+          channel: "message"
+    
